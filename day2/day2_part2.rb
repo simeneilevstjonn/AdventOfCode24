@@ -1,1 +1,1 @@
-p $<.count{|r|r=r.split.map(&:to_i);(0...r.size).map{|i|a=r[...i]+r[i+1..];n,x=a.each_cons(2).map{(_1-_2).abs}.minmax;(a==a.sort||a==a.sort.reverse)&&n>0&&x<4}.any?}
+p $<.count{|r|r=r.split.map(&:to_i);(0...r.size).map{|i|a=r[...i]+r[i+1..];n,x=a.sort.each_cons(2).map{_2-_1}.minmax;(a==a.sort||a==a.sort.reverse)&&n>0&&x<4}.any?}
