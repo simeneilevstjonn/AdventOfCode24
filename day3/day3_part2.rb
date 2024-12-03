@@ -1,12 +1,2 @@
 s=1
-p `dd`.scan(/(?<=mul\()\d+,\d+(?=\))|do(?:(?:n't)?)\(\)/).sum{|l|
-  r = 0;
-  if l == "do()"
-    s = 1
-  elsif l == "don't()"
-    s = 0
-  else
-    r = s * eval(l.tr(?,,?*))
-  end;
-  r
-}
+p `dd`.scan(/(?<=mul\()\d+,\d+(?=\))|do(?:(?:n't)?)\(\)/).sum{|l|l[2]==?(?(s=1;0):l[2]==?n?s=0:s*eval(l.tr(?,,?*))}
