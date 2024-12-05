@@ -6,11 +6,11 @@ r,d=`dd`.split("
 rules = r
 data = d
 
+v=->(l,i){r.map{|d,e|l[i]==e&&l[i+1..].include?(d)}.any?}
+
 incorrect = data.filter{|line|
   line.size.times.map{|i|
-    rules.map{|dep, el|
-      line[i] == el && line[i + 1..].include?(dep)
-    }.any?
+    v.(line,i)
   }.any?
 }
 
@@ -20,7 +20,7 @@ p incorrect.sum{|line|
     ac = true
     i = 0
     while i < line.size - 1 do
-      if (rules.map{|dep, el|line[i] == el && line[i + 1..].include?(dep)}.any?)
+      if v.(line,i)
         temp = line[i + 1]
         line[i + 1] = line[i]
         line[i] = temp
