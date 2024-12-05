@@ -1,7 +1,10 @@
-rules, data = `dd`.split("\n\n")
+r,d=`dd`.split("
 
-rules = rules.split("\n").map{_1.split(?|).map(&:to_i)}
-data = data.split("\n").map{_1.split(?,).map(&:to_i)}
+").map{_1.split("
+").map{|i|i.split(/\||,/).map &:to_i}}
+
+rules = r
+data = d
 
 incorrect = data.filter{|line|
   line.size.times.map{|i|
