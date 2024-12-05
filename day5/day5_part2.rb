@@ -8,13 +8,9 @@ data = d
 
 v=->(l,i){r.map{l[i]==_2&&l[i+1..].include?(_1)}.any?}
 
-incorrect = data.filter{|line|
-  line.size.times.map{|i|
-    v.(line,i)
-  }.any?
-}
+I=d.filter{|l|(0...l.size).any?{v.(l,_1)}}
 
-p incorrect.sum{|line|
+p I.sum{|line|
   ac = false
   while !ac
     ac = true
