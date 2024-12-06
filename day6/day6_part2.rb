@@ -1,16 +1,8 @@
 g=$<.map{_1.chomp.chars}
+V=->(y,x){y>=0&&x>=0&&y<g.size&&x<g[0].size}
 D=->(y, x, d, stopf){
-    while  y >= 0 && x >= 0 && y < g.size && x < g[0].size && stopf.(y,x,d) do
-        (0..3).map{
-            ny,nx=[[y-1,x],[y,x+1],[y+1,x],[y,x-1]][d]
-            if ny >= 0 && nx >= 0 && ny < g.size && nx < g[0].size && g[ny][nx] == ?#
-                d += 1
-                d %= 4
-            else
-                y,x=ny,nx
-                break
-            end
-        }
+    while V.(y,x)  && stopf.(y,x,d) do
+        (0..).map{n,m=[[y-1,x],[y,x+1],[y+1,x],[y,x-1]][d];V.(n,m)&&g[n][m]==?#?(d=(d+1)%4):(y,x=n,m;break)}
     end}
 t=[]
 D.(*g.map.with_index{[_2,_1.index(?^)]}.find{_2},0,->(y,x,d){t.push([y,x,d]);true})
