@@ -23,6 +23,7 @@ end
 
 do_trace(y,x,0,grid, ->(y,x,d){trace.push([y,x,d]);true})
 
+puts "trace contains #{trace.size} elements, of which #{trace.map{[_1,_2]}.uniq.size} are distinct coords"
 
 alts = []
 
@@ -34,7 +35,7 @@ alts = []
 
     l = false
     vis = grid.map{_1.map{[false] * 4}}
-    do_trace(*trace[i - 1], grid, ->(y,x,d){
+    do_trace(*trace[0], grid, ->(y,x,d){
         vis[y][x][d] ?  (l=true;false) :
         (vis[y][x][d] = true)
     })
@@ -47,4 +48,4 @@ alts = []
 }
 
 
-p alts.uniq.size
+p (alts - [y,x]).uniq.size
