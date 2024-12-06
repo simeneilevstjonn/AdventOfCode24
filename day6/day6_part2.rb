@@ -24,7 +24,9 @@ end
 do_trace(y,x,0,grid, ->(x,y,d){trace.push([x,y,d]);true})
 
 
-p (1...trace.size).sum{|i|
+alts = []
+
+(1...trace.size).map{|i|
     y,x,d = trace[i]
     # p i.to_f / trace.size
 
@@ -38,5 +40,10 @@ p (1...trace.size).sum{|i|
         (vis[y][x][d] = true)
     })
 
-    l ? 1 : 0
+    if l
+        alts.push([y,x])
+    end
 }
+
+
+p alts.uniq.size
