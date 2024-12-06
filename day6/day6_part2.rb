@@ -26,14 +26,17 @@ do_trace(y,x,0,grid, ->(x,y,d){trace.push([x,y,d]);true})
 
 p (1...trace.size).sum{|i|
     y,x,d = trace[i]
-    p i.to_f / trace.size
+    # p i.to_f / trace.size
 
     g = grid.map{_1.dup}
     g[y][x] = ?#
 
     l = false
-    local_trace = []
-    do_trace(*trace[i - 1], g, ->(y,x,d){(trace[...(i-1)].include?([y,x,d]) || local_trace.include?([y,x,d]))?(l=true;false):(local_trace.push([y,x,d]);true)})
+    vis = grid.map{_1.map{[false] * 4}}
+    do_trace(*trace[i - 1], g, ->(y,x,d){
+        vis[y][x][d] ?  (l=true;false) :
+        (vis[y][x][d] = true)
+    })
 
     l ? 1 : 0
 }
