@@ -1,10 +1,5 @@
-grid = $<.map{_1.chomp.chars}
-
-y, x = grid.map.with_index{[_2,_1.index(?^)]}.find{_2}
-p [y,x]
-trace = []
-
-def do_trace(y, x, d, grid, stopf)
+g=$<.map{_1.chomp.chars}
+def D(y, x, d, grid, stopf)
     while  y >= 0 && x >= 0 && y < grid.size && x < grid[0].size && stopf.(y,x,d) do
         (0..3).map{
             ny,nx=[[y-1,x],[y,x+1],[y+1,x],[y,x-1]][d]
@@ -20,32 +15,6 @@ def do_trace(y, x, d, grid, stopf)
         }
     end
 end
-
-do_trace(y,x,0,grid, ->(y,x,d){trace.push([y,x,d]);true})
-
-puts "trace contains #{trace.size} elements, of which #{trace.map{[_1,_2]}.uniq.size} are distinct coords"
-
-alts = []
-
-(1...trace.size).map{|i|
-    y,x,d = trace[i]
-    # p i.to_f / trace.size
-
-    grid[y][x] = ?#
-
-    l = false
-    vis = grid.map{_1.map{[false] * 4}}
-    do_trace(*trace[0], grid, ->(y,x,d){
-        vis[y][x][d] ?  (l=true;false) :
-        (vis[y][x][d] = true)
-    })
-
-    if l
-        alts.push([y,x])
-    end
-
-    grid[y][x] = ?.
-}
-
-
-p (alts - [y,x]).uniq.size
+t=[]
+D(*g.map.with_index{[_2,_1.index(?^)]}.find{_2},0,g,->(y,x,d){t.push([y,x,d]);true})
+p (1...t.size).map{|i|y,x,d=t[i];g[y][x]=?#;l=0;v=g.map{_1.map{[false]*4}};D(*t[0],g,->(y,x,d){v[y][x][d]?(l=1;false):(v[y][x][d]=true)});g[y][x]=?.;l>0?[y,x]:0}.uniq.size-1
