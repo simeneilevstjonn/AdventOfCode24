@@ -21,7 +21,7 @@ def do_trace(y, x, d, grid, stopf)
     end
 end
 
-do_trace(y,x,0,grid, ->(x,y,d){trace.push([x,y,d]);true})
+do_trace(y,x,0,grid, ->(y,x,d){trace.push([y,x,d]);true})
 
 
 alts = []
@@ -30,12 +30,11 @@ alts = []
     y,x,d = trace[i]
     # p i.to_f / trace.size
 
-    g = grid.map{_1.dup}
-    g[y][x] = ?#
+    grid[y][x] = ?#
 
     l = false
     vis = grid.map{_1.map{[false] * 4}}
-    do_trace(*trace[i - 1], g, ->(y,x,d){
+    do_trace(*trace[i - 1], grid, ->(y,x,d){
         vis[y][x][d] ?  (l=true;false) :
         (vis[y][x][d] = true)
     })
@@ -43,6 +42,8 @@ alts = []
     if l
         alts.push([y,x])
     end
+
+    grid[y][x] = ?.
 }
 
 
