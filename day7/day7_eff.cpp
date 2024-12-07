@@ -68,6 +68,8 @@ public:
                     break;
                 }
 
+                comb /= 3;
+
                 if (result > acase.sum) 
                 {
                     break;
