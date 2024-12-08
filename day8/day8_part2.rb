@@ -1,25 +1,22 @@
 grid = $<.map{_1.chomp.chars}
-
+tx = grid.flat_map.with_index{|r,i|r.filter_map.with_index{|c,j|[i,j,c]if c!=?.}}
 an = []
-
-grid.map.with_index{|row,i|
-    row.map.with_index{|col,j|
-        (-i..(grid.size-1-i)).map{|dy|
-            (-j..(grid[0].size-1-j)).map{|dx|
-                if dy != 0 || dx != 0
-                    found = (-100..100).map{|m|
-                        ny = i + m * dy;
-                        nx = j + m * dx;
-                        ny < grid.size && ny >= 0 && nx < grid[0].size && nx >= 0 && grid[ny][nx] != ?. ? grid[ny][nx] : nil
-                    }.compact.tally.any?{_2>1}
-
-                    if found
-                        an.push([i,j])
-                    end
-                end
-            }
+tx.combination(2).map{
+    i,j,c=_1;
+    y,x,d=_2;
+    if c==d
+        dy=y-i;
+        dx=x-j;
+        (0..).map{|m|
+            ny=i+m*dy;
+            nx=j+m*dx;
+            nY=i-m*dy;
+            nX=j-m*dx;
+            e=0
+            ny>=grid.size||nx>=grid[0].size||nx<0||ny<0 ?(e+=1):an.push([ny,nx])
+            nY>=grid.size||nX>=grid[0].size||nX<0||nY<0 ?(e+=1):an.push([nY,nX])
+            break if e>1
         }
-    }
+    end
 }
-
 p an.uniq.size
