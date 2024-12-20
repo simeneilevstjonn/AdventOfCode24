@@ -1,4 +1,4 @@
-grid = [list(row) for row in open("day20/day20_dummy.txt").read().strip().split("\n")]
+grid = [list(row) for row in open("day20/day20_input.txt").read().strip().split("\n")]
 
 for i, row in enumerate(grid):
     if "E" in row:
@@ -49,7 +49,7 @@ def dfsdiscover(y, x, dist, depth=0):
             dfsdiscover(ny, nx, dist, depth + 1)
 
 
-SAVE_THRESH = 50
+SAVE_THRESH = 100
 above_thresh = 0
 
 ot = []
@@ -72,14 +72,14 @@ for i in range(len(start_to_end_trace) - 1):
 
         delta = dold - dnew
 
-        if delta > SAVE_THRESH:
+        if delta >= SAVE_THRESH:
             above_thresh += 1
             ot.append(delta)
 
 
        
-for delta in sorted([*set(ot)]):
-    print("There are", ot.count(delta), "cheats that save", delta, "picoseconds.")
+# for delta in sorted([*set(ot)]):
+#     print("There are", ot.count(delta), "cheats that save", delta, "picoseconds.")
 
 
 print(above_thresh)
