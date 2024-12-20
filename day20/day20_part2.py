@@ -102,7 +102,7 @@ def cheat_combine(y, x, out_cheats = [], depth_left=20, length_add=0):
         if length < depth_left:
             append_or_update(cy, cx, length + length_add)
 
-            cheat_combine(cy, cx, out_cheats, depth_left - length, length + length_add)
+            cheat_combine(cy, cx, out_cheats, depth_left - length - 1, length + length_add + 1)
 
     return out_cheats
 
