@@ -84,13 +84,11 @@ for i, (y, x) in enumerate(traceto[sy][sx]):
 #                ot.append(delta)
 
 
-def cheat_combine(y, x, depth_left=20):
-    out_cheats = []
-
+def cheat_combine(y, x, out_cheats = [], depth_left=20, length_add=0):
     def append_or_update(y, x, l):
         found = False
         for i in range(len(out_cheats)):
-            if out_cheats[i][0] == y and out_cheats[i] == x:
+            if out_cheats[i][0] == y and out_cheats[i][1] == x:
                 found = True
                 out_cheats[i][2] = min(out_cheats[i][2], l)
                 break
@@ -102,9 +100,9 @@ def cheat_combine(y, x, depth_left=20):
 
     for cy, cx, length in atomic_cheats[y][x]:
         if length < depth_left:
-            append_or_update(cy, cx, length)
+            append_or_update(cy, cx, length + length_add)
 
-            cheat_combine(cy, cx, depth_left - length)
+            cheat_combine(cy, cx, out_cheats, depth_left - length, length + length_add)
 
     return out_cheats
 
