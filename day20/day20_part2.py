@@ -50,10 +50,7 @@ def dfsdiscover(y, x, dist, depth=0):
 
 
 
-SAVE_THRESH = 50
-above_thresh = 0
-
-ot = []
+atomic_cheats = [[[] for _ in r] for r in grid]
 
 for i, (y, x) in enumerate(traceto[sy][sx]):
    print("processing", y, x)
@@ -63,18 +60,68 @@ for i, (y, x) in enumerate(traceto[sy][sx]):
 
    for k, (drow, grow) in enumerate(zip(dist, grid)):
        for j, (dc, gc) in enumerate(zip(drow, grow)):
-           if gc == "#" or dc == 2147483647:
-               continue
-           distto = len(traceto[k][j]) - 1
+            if gc == "#" or dc == 2147483647:
+                continue
 
-           distbetween = i - distto
+            distto = len(traceto[k][j]) - 1
 
-           delta = distbetween - dc
+            distbetween = i - distto
 
-           above_thresh += delta >= SAVE_THRESH
+            delta = distbetween - dc
 
-           if delta >= SAVE_THRESH:
-               ot.append(delta)
+            if delta > 0:
+                atomic_cheats[y][x].append([k, j, dc])
+            
+#            distto = len(traceto[k][j]) - 1
+
+#            distbetween = i - distto
+
+#            delta = distbetween - dc
+
+#            above_thresh += delta >= SAVE_THRESH
+
+#            if delta >= SAVE_THRESH:
+#                ot.append(delta)
+
+
+def cheat_combine(y, x, depth_left=20):
+    out_cheats = []
+
+    def append_or_update(y, x, l):
+        found = False
+        for i in range(len(out_cheats)):
+            if out_cheats[i][0] == y and out_cheats[i] == x:
+                found = True
+                out_cheats[i][2] = min(out_cheats[i][2], l)
+                break
+
+        if not found:
+            out_cheats.append([y, x, l])
+
+        
+
+    for cy, cx, length in atomic_cheats[y][x]:
+        if length < depth_left:
+            append_or_update(cy, cx, length)
+
+            cheat_combine(cy, cx, depth_left - length)
+
+    return out_cheats
+
+SAVE_THRESH = 50
+above_thresh = 0
+
+ot = []
+
+for i, (y, x) in enumerate(traceto[sy][sx]):
+    for cy, cx, length in cheat_combine(y, x):
+        dist_between = i - (len(traceto[cy][cx]) - 1)
+        
+        delta = dist_between - length
+
+        if delta >= SAVE_THRESH:
+            ot.append(delta)
+            above_thresh += 1
 
        
 # print(ot)
