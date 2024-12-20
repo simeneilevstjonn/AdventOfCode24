@@ -49,81 +49,35 @@ def dfsdiscover(y, x, dist, depth=0):
             dfsdiscover(ny, nx, dist, depth + 1)
 
 
-
-atomic_cheats = [[[] for _ in r] for r in grid]
-
-for i, (y, x) in enumerate(traceto[sy][sx]):
-   print("processing", y, x)
-   dist = [[2147483647] * len(r) for r in grid]
-
-   dfsdiscover(y, x, dist, 0)
-
-   for k, (drow, grow) in enumerate(zip(dist, grid)):
-       for j, (dc, gc) in enumerate(zip(drow, grow)):
-            if gc == "#" or dc == 2147483647:
-                continue
-
-            distto = len(traceto[k][j]) - 1
-
-            distbetween = i - distto
-
-            delta = distbetween - dc
-
-            if delta > 0:
-                atomic_cheats[y][x].append([k, j, dc])
-            
-#            distto = len(traceto[k][j]) - 1
-
-#            distbetween = i - distto
-
-#            delta = distbetween - dc
-
-#            above_thresh += delta >= SAVE_THRESH
-
-#            if delta >= SAVE_THRESH:
-#                ot.append(delta)
-
-
-def cheat_combine(y, x, out_cheats = [], depth_left=20, length_add=0):
-    def append_or_update(y, x, l):
-        found = False
-        for i in range(len(out_cheats)):
-            if out_cheats[i][0] == y and out_cheats[i][1] == x:
-                found = True
-                out_cheats[i][2] = min(out_cheats[i][2], l)
-                break
-
-        if not found:
-            out_cheats.append([y, x, l])
-
-        
-
-    for cy, cx, length in atomic_cheats[y][x]:
-        if length < depth_left:
-            append_or_update(cy, cx, length + length_add)
-
-            cheat_combine(cy, cx, out_cheats, depth_left - length - 1, length + length_add + 1)
-
-    return out_cheats
-
 SAVE_THRESH = 50
 above_thresh = 0
 
 ot = []
 
-for i, (y, x) in enumerate(traceto[sy][sx]):
-    for cy, cx, length in cheat_combine(y, x):
-        dist_between = i - (len(traceto[cy][cx]) - 1)
-        
-        delta = dist_between - length
+def manhattan(y, x, i, j):
+    return abs(y - i) + abs(x - j)
 
-        if delta >= SAVE_THRESH:
-            ot.append(delta)
+start_to_end_trace = traceto[sy][sx][::-1]
+
+for i in range(len(start_to_end_trace) - 1):
+    y, x = start_to_end_trace[i]
+
+    for oy, ox in start_to_end_trace[i + 1:]:
+        d = manhattan(y, x, oy, ox)
+        if d > 20:
+            continue
+        
+        dold = len(traceto[y][x])
+        dnew = len(traceto[oy][ox]) + d
+
+        delta = dold - dnew
+
+        if delta > SAVE_THRESH:
             above_thresh += 1
+            ot.append(delta)
+
 
        
-# print(ot)
-
 for delta in sorted([*set(ot)]):
     print("There are", ot.count(delta), "cheats that save", delta, "picoseconds.")
 
