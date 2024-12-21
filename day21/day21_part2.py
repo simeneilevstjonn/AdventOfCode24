@@ -70,7 +70,7 @@ class KeypadVertex:
             if self.depth == 0:
                 self.edges.append([manhattan(*layer_to_coords(self.layer), *layer_to_coords(other_layer)), keypad_vertices[self.depth][self.y][self.x][other_layer]])
             else:
-                d = numpad_layer_trans[self.layer][other_layer] + 1 + numpad_layer_trans[other_layer][self.layer]
+                d = numpad_layer_trans[self.layer][other_layer]
                 self.edges.append([d, keypad_vertices[self.depth][self.y][self.x][other_layer]])
 
 
